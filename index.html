@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webseite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background-color: #000000;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+        }
+
+        .background-image-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.imghippo.com/files/C81Jq1728906988.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+
+        .background-info {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+            color: white;
+            text-align: left;
+            z-index: 2;
+            padding: 30px;
+            border-radius: 10px;
+            width: 3000px;
+        }
+
+        .background-info h1 {
+            margin: 0;
+            font-size: 100px;
+        }
+
+        .background-info p {
+            margin: -15px 0;
+            font-size: 20px;
+        }
+
+        .separator {
+            width: 100%;
+            height: 5px;
+            background-color: #ffffff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .down-arrow {
+            position: absolute;
+            bottom: 30px; /* 10px höher gesetzt */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .down-arrow:hover {
+            opacity: 0.7;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav .logo {
+            position: absolute;
+            left: 20px;
+        }
+
+        nav .logo img {
+            height: 80px;
+        }
+
+        nav .nav-links {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+        }
+
+        nav .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+
+        nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav .nav-links a:hover {
+            color: #00aaff;
+        }
+
+        /* Dropdown Menü für Support */
+        nav .nav-links .dropdown {
+            position: relative;
+        }
+
+        nav .nav-links .dropdown-content {
+            display: block; /* display block bleibt, aber mit opacity gesteuert */
+            position: absolute;
+            top: 41px; /* Noch weiter nach oben verschoben */
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            min-width: 225px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none; /* verhinder, dass es anklickbar ist, solange es unsichtbar ist */
+            transition: opacity 0.3s ease, transform 0.3s ease; /* Einblenden-Animation */
+        }
+
+        nav .nav-links .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        nav .nav-links .dropdown-content a:hover {
+            background-color: #00aaff;
+        }
+
+        nav .nav-links .dropdown:hover .dropdown-content {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto; /* Jetzt anklickbar */
+        }
+
+        /* Pfeilstil und Positionierung */
+        .fa-sort-down {
+            margin-left: 5px; /* Etwas weiter rechts vom Text */
+            position: relative;
+            top: -3px; /* Leicht nach oben verschoben */
+        }
+
+        /* Entfernen des Profilbereichs */
+        .profile {
+            display: none;
+        }
+
+section {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.additional-sections-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 50px 20px;
+}
+
+.additional-section {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 300px;
+    text-align: left;
+    border: 2px solid white; /* Weißer Rand */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.additional-section img {
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.additional-section .text-content h3 {
+    color: #00aaff;
+    margin: 0;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.additional-section .text-content p {
+    margin: 0;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.minigames-section {
+    padding: 50px 20px;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.minigames-section h2 {
+    font-size: 36px; /* Gleiche Größe wie „Unser Team“ */
+    margin-bottom: 30px; /* Mehr Abstand zu den Minigames */
+    color: white;
+}
+
+.minigames-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.minigame {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 250px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.minigame img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.minigame h3 {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.minigame a {
+    color: #00aaff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease-in-out;
+}
+
+.minigame a:hover {
+    text-decoration: underline;
+}
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #00aaff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+/* https://postimg.cc/RWZ0JGzrs */
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <img src="https://i.postimg.cc/DzBXmhDz/Cr-A-removebg-preview.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="https://app.craftportal.net">Home</a></li>
+            <li><a href="https://app.craftportal.net/news">News</a></li>
+            <li class="dropdown">
+                <a href="">Tools <i class="fa-solid fa-sort-down" style="color: #22d2fc;"></i></a>
+                <div class="dropdown-content">
+                    <a href="https://app.craftportal.net/url-shortener">URL-Shortener</a>
+                    <a href="https://app.craftportal.net/file-converter">Datei Konvertieren</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="background-image-container">
+        <div class="background-image"></div>
+        <div class="background-info">
+            <h1>Craftportal Tools</h1>
+            <p>Ein Portal, endlose Möglichkeiten – Tools für echte Effizienz.</p>
+        </div>
+        <div class="separator"></div>
+        <div class="down-arrow" onclick="scrollDown()">
+            &#9660;
+        </div>
+    </div>
+
+<main id="home">
+    <section class="minigames-section">
+        <h2>Unsere Tools</h2>
+        <div class="minigames-grid">
+            <div class="minigame">
+                <img src="https://i.postimg.cc/Df4qtY33/Design-ohne-Titel-68.png" alt="Construct & Conquer">
+                <h3>URL-Shortener</h3>
+                <p>Ein URL-Shortener verkürzt lange Webadressen, um das Teilen zu erleichtern.</p>
+                <a href="https://app.craftportal.net/url-shortener"><i class="fa-solid fa-chevron-right"></i> Tool abrufen</a>
+            </div>
+            <div class="minigame">
+                <img src="https://via.placeholder.com/250" alt="Coming Soon...">
+                <h3>Coming Soon...</h3>
+                <p>Hier gibt es noch nichts zu sehen.</p>
+                <a href=""><i class="fa-solid fa-chevron-right"></i> Weiter lesen</a>
+            </div>
+            <div class="minigame">
+                <img src="https://via.placeholder.com/250" alt="Coming Soon...">
+                <h3>Coming Soon...</h3>
+                <p>Hier gibt es noch nichts zu sehen.</p>
+                <a href=""><i class="fa-solid fa-chevron-right"></i> Weiter lesen</a>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <script>
+        function scrollDown() {
+            document.querySelector('.impressum-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+
+</html>
