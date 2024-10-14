@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+      color: #000;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: #000;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 400;
+      color: #000;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+      color: #000;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button {
+      background-color: #22d2fc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button:hover {
+      background-color: #1bb3d1;
+    }
+
+    .loading-spinner {
+      margin-top: 20px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #22d2fc;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .response-message {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #000;
+    }
+
+    .output-url {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      word-wrap: break-word;
+    }
+
+    .output-url a {
+      color: #22d2fc;
+      text-decoration: none;
+    }
+
+    .output-url a:hover {
+      text-decoration: none;
+    }
+
+    .copy-link {
+      margin-top: 10px;
+      color: #22d2fc;
+      cursor: pointer;
+    }
+
+    .copy-link:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: black;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Verkürze deinen Link!</h1>
+    <form id="urlShortenerForm" onsubmit="shortenURL(event)">
+      <label for="url">URL eingeben:</label>
+      <input type="url" id="url" name="url" placeholder="https://example.com" required>
+      <input name="custom" type="text" id="custominput" placeholder="Benutzerdefiniertes Kürzel (optional)">
+      <button type="submit">Verkürzen</button>
+      <div id="loading" class="loading-spinner"></div>
+    </form>
+    <div id="response" class="response-message"></div>
+    <div id="error" class="error-message"></div>
+  </div>
+
+  <script>
+    function shortenURL(event) {
+      event.preventDefault();
+
+      const loadingSpinner = document.getElementById('loading');
+      const responseMessage = document.getElementById('response');
+      const errorMessage = document.getElementById('error');
+      const urlInput = document.getElementById('url').value;
+      const custom = document.getElementById('custominput').value;
+
+      const blockedDomains = [
+        'bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'is.gd', 'buff.ly', 'ow.ly', 'rebrandly.com'
+      ];
+
+      const urlDomain = new URL(urlInput).hostname;
+
+      if (blockedDomains.some(domain => urlDomain.includes(domain))) {
+        errorMessage.innerHTML = "Fehler: Links von anderen URL-Shortenern sind nicht erlaubt.";
+        return;
+      }
+
+      loadingSpinner.style.display = 'block';
+      responseMessage.innerHTML = ''; // Clear any previous messages
+      errorMessage.innerHTML = ''; // Clear any previous error messages
+
+      const data = {
+        "domain": "redirect.craftportal.net",
+        "originalURL": urlInput,
+        "allowDuplicates": false
+      };
+
+      if (custom) {
+        data.path = custom;
+      }
+
+      fetch('https://api.short.cm/links/public', {
+        method: 'post',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'authorization': 'pk_FvSDJWiNYAPwgDh8'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        loadingSpinner.style.display = 'none';
+        if (data.shortURL) {
+          responseMessage.innerHTML = `
+            <div class="output-url">
+              Dein Kurzlink ist: <a href="${data.shortURL}" target="_blank">${data.shortURL}</a>
+            </div>
+            <span class="copy-link" onclick="copyLink('${data.shortURL}')">Klicken, um den Link zu kopieren</span>
+          `;
+          navigator.clipboard.writeText(data.shortURL);
+          alert("Kurzlink kopiert: " + data.shortURL);
+        } else if (data.message && data.message.includes("already exists")) {
+          errorMessage.innerHTML = "Fehler: Das benutzerdefinierte Kürzel existiert bereits.";
+        } else {
+          errorMessage.innerHTML = "Fehler: " + data.message;
+        }
+      })
+      .catch(error => {
+        loadingSpinner.style.display = 'none';
+        errorMessage.innerHTML = "Es gab einen Fehler: " + error;
+      });
+
+      document.getElementById('url').value = '';
+      document.getElementById('custominput').value = '';
+    }
+
+    function copyLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        alert('Link kopiert: ' + link);
+      });
+    }
+  </script>
+</body>
+</html>
