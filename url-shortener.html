@@ -1,220 +1,368 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Shortener</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beispiel Webseite</title>
+    
+    <!-- Google Fonts für Poppins einbinden -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+       /* Grundlegende Stile */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f3f7;
+        }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+        /* Weitere Stile hier ... */
 
-    .form-container {
-      background-color: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      width: 400px;
-      text-align: center;
-      color: #000;
-    }
+        .output-url {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f2f3f7;
+            border-radius: 5px;
+            word-wrap: break-word;
+            text-align: left; /* Links ausrichten */
+        }
 
-    h1 {
-      margin-bottom: 1rem;
-      font-weight: 600;
-      color: #000;
-    }
+        .output-url a {
+            color: #22d2fc;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: 400;
-      color: #000;
-    }
+        .output-url a:hover {
+            text-decoration: none;
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f0f0f0;
-      color: #000;
-      font-family: 'Poppins', sans-serif;
-    }
+        .error-message {
+            margin-top: 20px; /* Weiter unten platzieren */
+            color: black; /* Schwarz setzen */
+        } black; /* Schwarz setzen */
+        }
 
-    button {
-      background-color: #22d2fc;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: 'Poppins', sans-serif;
-    }
+        header {
+            background-color: white;
+            padding: 10px 20px;
+            position: relative;
+        }
 
-    button:hover {
-      background-color: #1bb3d1;
-    }
+        .navigation {
+            display: flex;
+            justify-content: center; /* Zentriert die Navigation */
+            align-items: center;
+            font-size: 1em;
+            gap: 20px; /* Abstand zwischen den Navigationselementen */
+        }
 
-    .loading-spinner {
-      margin-top: 20px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #22d2fc;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
+        .logo {
+            margin-right: auto; /* Logo bleibt links */
+        }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+        .logo img {
+            display: inline-block;
+            max-height: 56px;
+            max-width: 225px;
+            padding: 8px 4px 8px 12px;
+            vertical-align: middle;
+            box-sizing: border-box;
+            border: 0;
+        }
 
-    .response-message {
-      margin-top: 20px;
-      font-size: 1rem;
-      color: #000;
-    }
+        .nav-items a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    .output-url {
-      margin-top: 15px;
-      padding: 10px;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      word-wrap: break-word;
-    }
+        .nav-items a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
 
-    .output-url a {
-      color: #22d2fc;
-      text-decoration: none;
-    }
+        main {
+            padding: 80px 385px; /* Weiter nach oben und rechts verschieben */
+        }
 
-    .output-url a:hover {
-      text-decoration: none;
-    }
+        .styled-text {
+            font-size: 51px; /* Größere Schriftgröße */
+            line-height: 1;
+            letter-spacing: 2px; /* Buchstabenabstand erhöhen */
+            position: relative;
+        }
 
-    .copy-link {
-      margin-top: 10px;
-      color: #22d2fc;
-      cursor: pointer;
-    }
+        .styled-text .dark-blue {
+            color: #153270;
+            font-weight: bold;
+        }
 
-    .copy-link:hover {
-      text-decoration: underline;
-    }
+        .styled-text .teal {
+            color: #00aab5;
+            font-weight: bold;
+        }
 
-    .error-message {
-      color: black;
-      margin-top: 10px;
-    }
-  </style>
+        .subtext {
+            font-size: 21px; /* Etwas größere Schriftgröße für besseren Kontrast */
+            color: #000; /* Schwarz */
+            margin-top: 5px; /* Weniger Abstand zum Titel */
+        }
+
+        /* Textarea Styling */
+        textarea {
+            margin-top: 15px;
+            width: 49%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
+        }
+
+        /* Flexbox Container für Dropdown und Custom-Input */
+        .input-group {
+            display: flex;
+            gap: 10px; /* Abstand zwischen Dropdown und Textarea */
+            align-items: center;
+        }
+
+        /* Dropdown-Menü Styling */
+        select {
+            width: 25%; /* Breite des Dropdown-Menüs */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+        }
+
+        /* Benutzerdefiniertes Kürzel (Textarea) Styling */
+        .custom-input {
+            width: 23%; /* Breite des Kürzel-Feldes */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+        }
+
+        /* Button Styling */
+        .custom-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #00aab5;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 20px; /* Abstand zum Subtext */
+        }
+
+        .custom-button:hover {
+            background-color: #153270;
+        }
+
+        .custom-button i {
+            margin-right: 10px;
+            font-size: 18px; /* Icon-Größe */
+        }
+
+        /* Weißer Bereich */
+        .white-section {
+            background-color: white;
+            padding: 10px 50px; /* Innenabstand für mehr Platz */
+            text-align: center; /* Zentriere den Text */
+        }
+
+        .white-section h1 {
+            color: #143270;
+            font-weight: bold;
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .white-section p {
+            color: black;
+            font-size: 20px;
+            line-height: 1.5;
+            max-width: 1150px; /* Maximale Breite des Textes */
+            margin: 0 auto; /* Zentriere den Textblock */
+        }
+    </style>
 </head>
 <body>
-  <div class="form-container">
-    <h1>Verkürze deinen Link!</h1>
-    <form id="urlShortenerForm" onsubmit="shortenURL(event)">
-      <label for="url">URL eingeben:</label>
-      <input type="url" id="url" name="url" placeholder="https://example.com" required>
-      <input name="custom" type="text" id="custominput" placeholder="Benutzerdefiniertes Kürzel (optional)">
-      <button type="submit">Verkürzen</button>
-      <div id="loading" class="loading-spinner"></div>
-    </form>
-    <div id="response" class="response-message"></div>
-    <div id="error" class="error-message"></div>
-  </div>
-
-  <script>
-    function shortenURL(event) {
-      event.preventDefault();
-
-      const loadingSpinner = document.getElementById('loading');
-      const responseMessage = document.getElementById('response');
-      const errorMessage = document.getElementById('error');
-      const urlInput = document.getElementById('url').value;
-      const custom = document.getElementById('custominput').value;
-
-      const blockedDomains = [
-        'bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'is.gd', 'buff.ly', 'ow.ly', 'rebrandly.com'
-      ];
-
-      const urlDomain = new URL(urlInput).hostname;
-
-      if (blockedDomains.some(domain => urlDomain.includes(domain))) {
-        errorMessage.innerHTML = "Fehler: Links von anderen URL-Shortenern sind nicht erlaubt.";
-        return;
-      }
-
-      loadingSpinner.style.display = 'block';
-      responseMessage.innerHTML = ''; // Clear any previous messages
-      errorMessage.innerHTML = ''; // Clear any previous error messages
-
-      const data = {
-        "domain": "redirect.craftportal.net",
-        "originalURL": urlInput,
-        "allowDuplicates": false
-      };
-
-      if (custom) {
-        data.path = custom;
-      }
-
-      fetch('https://api.short.cm/links/public', {
-        method: 'post',
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json',
-          'authorization': 'pk_FvSDJWiNYAPwgDh8'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(data => {
-        loadingSpinner.style.display = 'none';
-        if (data.shortURL) {
-          responseMessage.innerHTML = `
-            <div class="output-url">
-              Dein Kurzlink ist: <a href="${data.shortURL}" target="_blank">${data.shortURL}</a>
+    <header>
+        <nav class="navigation">
+            <div class="logo">
+                <img src="https://i.postimg.cc/wBGkSNwd/LOLLOGOREDIRECTCRAFTPORTAL-1.png" alt="Logo">
             </div>
-            <span class="copy-link" onclick="copyLink('${data.shortURL}')">Klicken, um den Link zu kopieren</span>
-          `;
-          navigator.clipboard.writeText(data.shortURL);
-          alert("Kurzlink kopiert: " + data.shortURL);
-        } else if (data.message && data.message.includes("already exists")) {
-          errorMessage.innerHTML = "Fehler: Das benutzerdefinierte Kürzel existiert bereits.";
-        } else {
-          errorMessage.innerHTML = "Fehler: " + data.message;
+            <div class="nav-items">
+                <a href="https://app.craftportal.net/url-shortener">Home</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="styled-text">
+            <span class="dark-blue">Einfach. </span>
+            <span class="teal">Umleiten</span><span class="dark-blue">. </span>
+            <br>
+            <span class="dark-blue">Dein </span>
+            <span class="teal">URL </span>
+            <span class="dark-blue">Shortener.</span>
+        </div>
+        <div class="subtext">
+            Verkürze deine URLs kostenlos und schnell! Passe sie nach<br>
+            deinen Vorstellungen an und erhalte kompakte Links.
+        </div>
+
+        <!-- Textarea zum Eingeben der URL -->
+        <textarea rows="1" placeholder="Gib hier deine lange URL ein..." id="url"></textarea>
+
+        <!-- Dropdown-Menü und Textarea für benutzerdefiniertes Kürzel -->
+        <div class="input-group">
+            <select id="domain">
+                <option value="redirect.craftportal.net">redirect.craftportal.net</option>
+            </select>
+
+            <input type="text" id="custominput" class="custom-input" placeholder="Benutzerdefiniertes Kürzel (optional)">
+        </div>
+
+        <!-- Button direkt unter dem Dropdown-Menü -->
+        <button class="custom-button" onclick="shortenURL(event)">
+            <i class="fa fa-link"></i> Link verkürzen
+        </button>
+        
+        <!-- Lade- und Fehlermeldungen -->
+        <div id="loading" style="display:none;">Laden...</div>
+        <div id="response"></div>
+        <div id="error" style="color:red;"></div>
+    </main>
+
+    <!-- Weißer Bereich unter dem Button -->
+    <div class="white-section">
+        <h1>Was ist ein URL-Shortener?</h1>
+        <p>Ein URL-Shortener ist ein Tool, das lange Webadressen (URLs) verkürzt, um sie leichter zu teilen und zu verwenden. Die verkürzten Links funktionieren genauso wie die originalen Links, führen aber schneller ans Ziel und sind benutzerfreundlicher.</p>
+    </div>
+
+<div class="white-section">
+    <h1>Vorteile eines URL-Shorteners</h1>
+    <p>
+        <strong>Einfach zu teilen:</strong><br>
+        Verkürzte Links sind übersichtlicher und lassen sich leichter in E-Mails, Social-Media-Posts oder Nachrichten einfügen.
+        <br><br> <!-- Leere Zeile nach dem Satz -->
+    </p>
+    <p>
+        <strong>Statistiken verfolgen:</strong><br>
+        Viele URL-Shortener bieten Analysen an, um Klicks und Traffic zu verfolgen.
+    </p>
+        <br><br> <!-- Leere Zeile nach dem Satz -->
+    <p>
+        <strong>Platzersparnis:</strong><br>
+        Besonders nützlich bei Plattformen mit Zeichenbeschränkungen, z. B. Twitter.
+    </p>
+</div>
+
+<script>
+        function shortenURL(event) {
+            event.preventDefault();
+
+            const loadingSpinner = document.getElementById('loading');
+            const responseMessage = document.getElementById('response');
+            const errorMessage = document.getElementById('error');
+            let urlInput = document.getElementById('url').value.trim();
+            const custom = document.getElementById('custominput').value;
+
+            const blockedDomains = [
+                'bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'is.gd', 'buff.ly', 'ow.ly', 'rebrandly.com', 
+                't2mio.com', 'blink.io', 'shorte.st', 'cutt.ly', 'clkim.com', 'snip.ly', 'yourls.org', 
+                'polrproject.org', 'short.io', 'adf.ly', 'tiny.cc', 'lnnkin.com', 'chilp.it', 'v.gd'
+            ];
+
+            if (!urlInput.startsWith('http://') && !urlInput.startsWith('https://')) {
+                urlInput = 'http://' + urlInput;
+            }
+
+            try {
+                const urlDomain = new URL(urlInput).hostname;
+                
+                if (blockedDomains.some(domain => urlDomain.includes(domain))) {
+                    errorMessage.innerHTML = "Fehler: Links von anderen URL-Shortenern sind nicht erlaubt.";
+                    return;
+                }
+            } catch (e) {
+                errorMessage.innerHTML = "Fehler: Bitte eine gültige URL eingeben.";
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+            responseMessage.innerHTML = '';
+            errorMessage.innerHTML = '';
+
+            const data = {
+                "domain": "redirect.craftportal.net",
+                "originalURL": urlInput,
+                "allowDuplicates": false
+            };
+
+            if (custom) {
+                data.path = custom;
+            }
+
+            fetch('https://api.short.cm/links/public', {
+                method: 'post',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'authorization': 'pk_FvSDJWiNYAPwgDh8'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingSpinner.style.display = 'none';
+                if (data.shortURL) {
+                    responseMessage.innerHTML = 
+                        `<div class="output-url"><a onclick="copyLink('${data.shortURL}')">${data.shortURL}</a></div>`;
+                    navigator.clipboard.writeText(data.shortURL);
+                    alert("Kurzlink kopiert: " + data.shortURL);
+                } else if (data.message && data.message.includes("already exists")) {
+                    errorMessage.innerHTML = "Fehler: Das benutzerdefinierte Kürzel existiert bereits.";
+                } else {
+                    errorMessage.innerHTML = "Fehler: " + data.message;
+                }
+            })
+            .catch(error => {
+                loadingSpinner.style.display = 'none';
+                errorMessage.innerHTML = "Es gab einen Fehler: " + error;
+            });
+
+            document.getElementById('url').value = '';
+            document.getElementById('custominput').value = '';
         }
-      })
-      .catch(error => {
-        loadingSpinner.style.display = 'none';
-        errorMessage.innerHTML = "Es gab einen Fehler: " + error;
-      });
 
-      document.getElementById('url').value = '';
-      document.getElementById('custominput').value = '';
-    }
+        function copyLink(link) {
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link kopiert: ' + link);
+            });
+        }
+</script>
 
-    function copyLink(link) {
-      navigator.clipboard.writeText(link).then(() => {
-        alert('Link kopiert: ' + link);
-      });
-    }
-  </script>
 </body>
 </html>
