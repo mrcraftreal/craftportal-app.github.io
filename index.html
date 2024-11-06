@@ -300,6 +300,7 @@ body:active .cursor-circle {
     <option value="redirect.craftportal.net">redirect.craftportal.net</option>
     <option value="link.ix.tc">link.ix.tc</option>
     <option value="link.ctx.cl">link.ctx.cl</option>
+    <option value="link.l5.ca">link.l5.ca</option>
 </select>
 
             <input type="text" id="custominput" class="custom-input" placeholder="Benutzerdefiniertes Kürzel (optional)">
@@ -387,6 +388,8 @@ function shortenURL(event) {
         apiKey = 'pk_kI2hFHYh3H3EDCDQ';
     } else if (domainSelect === 'link.ctx.cl') {
         apiKey = 'pk_adF2PUkkxZob1Npo';
+    } else if (domainSelect === 'link.l5.ca') {
+        apiKey = 'pk_gwdCXwGDJiDsm7A5';
     } else {
         errorMessage.innerHTML = "Fehler: Unbekannte Domain.";
         return;
