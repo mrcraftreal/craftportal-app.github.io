@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craftportal • URL Shortener</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Google Fonts für Poppins einbinden -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+       /* Grundlegende Stile */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f3f7;
+            cursor: none; /* Alle Standard-Cursors unsichtbar machen */
+        }
+        
+                * {
+            cursor: none !important; /* Cursor für alle Elemente ausblenden */
+        }
+
+        /* Weitere Stile hier ... */
+
+        .output-url {
+            margin-top: 15px;
+            margin-bottom: -15px;
+            padding: 10px;
+            background-color: #f2f3f7;
+            border-radius: 5px;
+            word-wrap: break-word;
+            text-align: left; /* Links ausrichten */
+        }
+
+        .output-url a {
+            color: #153270;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .output-url a:hover {
+            text-decoration: none;
+        }
+
+        .error-message {
+            margin-top: 20px; /* Weiter unten platzieren */
+            color: black; /* Schwarz setzen */
+        } black; /* Schwarz setzen */
+        }
+
+        header {
+            background-color: white;
+            padding: 10px 20px;
+            position: relative;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center; /* Zentriert die Navigation */
+            align-items: center;
+            font-size: 1em;
+            gap: 20px; /* Abstand zwischen den Navigationselementen */
+        }
+
+        .logo {
+            margin-right: auto; /* Logo bleibt links */
+        }
+
+        .logo img {
+            display: inline-block;
+            max-height: 56px;
+            max-width: 225px;
+            padding: 8px 4px 8px 12px;
+            vertical-align: middle;
+            box-sizing: border-box;
+            border: 0;
+        }
+
+        .nav-items a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-items a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        main {
+            padding: 80px 385px; /* Weiter nach oben und rechts verschieben */
+        }
+
+        .styled-text {
+            font-size: 51px; /* Größere Schriftgröße */
+            line-height: 1;
+            letter-spacing: 2px; /* Buchstabenabstand erhöhen */
+            position: relative;
+        }
+
+        .styled-text .dark-blue {
+            color: #153270;
+            font-weight: bold;
+        }
+
+        .styled-text .teal {
+            color: #00aab5;
+            font-weight: bold;
+        }
+
+        .subtext {
+            font-size: 21px; /* Etwas größere Schriftgröße für besseren Kontrast */
+            color: #000; /* Schwarz */
+            margin-top: 5px; /* Weniger Abstand zum Titel */
+        }
+
+        /* Textarea Styling */
+        textarea {
+            margin-top: 15px;
+            width: 49%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
+        }
+
+        /* Flexbox Container für Dropdown und Custom-Input */
+        .input-group {
+            display: flex;
+            gap: 10px; /* Abstand zwischen Dropdown und Textarea */
+            align-items: center;
+        }
+
+        /* Dropdown-Menü Styling */
+        select {
+            width: 25%; /* Breite des Dropdown-Menüs */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+        }
+
+        /* Benutzerdefiniertes Kürzel (Textarea) Styling */
+        .custom-input {
+            width: 23%; /* Breite des Kürzel-Feldes */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+        }
+
+        /* Button Styling */
+        .custom-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #00aab5;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 20px; /* Abstand zum Subtext */
+        }
+
+        .custom-button:hover {
+            background-color: #153270;
+        }
+
+        .custom-button i {
+            margin-right: 10px;
+            font-size: 18px; /* Icon-Größe */
+        }
+
+        /* Weißer Bereich */
+        .white-section {
+            background-color: white;
+            padding: 10px 50px; /* Innenabstand für mehr Platz */
+            text-align: center; /* Zentriere den Text */
+        }
+
+        .white-section h1 {
+            color: #143270;
+            font-weight: bold;
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .white-section p {
+            color: black;
+            font-size: 20px;
+            line-height: 1.5;
+            max-width: 1150px; /* Maximale Breite des Textes */
+            margin: 0 auto; /* Zentriere den Textblock */
+        }
+        
+        /* Abstand für den Spinner neben dem "Link verkürzen" Button */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #b3e5fc;
+            border-top: 3px solid #00aab5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px; /* Abstand zum Text */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Kreis-Mauszeiger */
+
+.cursor-circle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(128, 128, 128, 0.7); /* Helle graue Umrandung */
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease; /* Kurze Animation bei Klick */
+}
+
+/* Klick-Effekt */
+body:active .cursor-circle {
+    transform: translate(-50%, -50%) scale(0.8); /* Kurz kleiner bei Klick */
+}
+
+        /* Footer Styling */
+        footer {
+            background-color: #f2f3f7; /* #153270 */
+            color: black;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #00aab5;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navigation">
+            <div class="logo">
+                <img src="https://i.postimg.cc/wBGkSNwd/LOLLOGOREDIRECTCRAFTPORTAL-1.png" alt="Logo">
+            </div>
+            <div class="nav-items">
+                <a href="https://app.craftportal.net/url-shortener">Home</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="styled-text">
+            <span class="dark-blue">Einfach. </span>
+            <span class="teal">Umleiten</span><span class="dark-blue">. </span>
+            <br>
+            <span class="dark-blue">Dein </span>
+            <span class="teal">URL </span>
+            <span class="dark-blue">Shortener.</span>
+        </div>
+        <div class="subtext">
+            Verkürze deine URLs kostenlos und schnell! Passe sie nach<br>
+            deinen Vorstellungen an und erhalte kompakte Links.
+        </div>
+
+        <!-- Textarea zum Eingeben der URL -->
+        <textarea rows="1" placeholder="Gib hier deine lange URL ein..." id="url"></textarea>
+
+        <!-- Dropdown-Menü und Textarea für benutzerdefiniertes Kürzel -->
+        <div class="input-group">
+<select id="domain">
+    <option value="redirect.craftportal.net">redirect.craftportal.net</option>
+    <option value="link.ix.tc">link.ix.tc</option>
+    <option value="link.ctx.cl">link.ctx.cl</option>
+</select>
+
+            <input type="text" id="custominput" class="custom-input" placeholder="Benutzerdefiniertes Kürzel (optional)">
+        </div>
+
+        <button class="custom-button" onclick="shortenURL(event)">
+            <i class="fa fa-link"></i> Link verkürzen 
+            <span class="spinner" id="spinner" style="display:none;"></span>
+        </button>
+        
+        <!-- Lade- und Fehlermeldungen -->
+        <div id="loading" style="display:none;">Laden...</div>
+        <div id="response"></div>
+        <div id="error" style="color:black; margin-top: 15px; margin-bottom: -25px;"></div>
+    </main>
+
+    <!-- Weißer Bereich unter dem Button -->
+    <div class="white-section">
+        <h1>Was ist ein URL-Shortener?</h1>
+        <p>Ein URL-Shortener ist ein Tool, das lange Webadressen (URLs) verkürzt, um sie leichter zu teilen und zu verwenden. Die verkürzten Links funktionieren genauso wie die originalen Links, führen aber schneller ans Ziel und sind benutzerfreundlicher.</p>
+    </div>
+
+<div class="white-section">
+    <h1>Vorteile eines URL-Shorteners</h1>
+    <p>
+        <strong>Einfach zu teilen:</strong><br>
+        Verkürzte Links sind übersichtlicher und lassen sich leichter in E-Mails, Social-Media-Posts oder Nachrichten einfügen.
+        <br><br> <!-- Leere Zeile nach dem Satz -->
+    </p>
+    <p>
+        <strong>Statistiken verfolgen:</strong><br>
+        Viele URL-Shortener bieten Analysen an, um Klicks und Traffic zu verfolgen.
+    </p>
+        <br><br> <!-- Leere Zeile nach dem Satz -->
+    <p>
+        <strong>Platzersparnis:</strong><br>
+        Besonders nützlich bei Plattformen mit Zeichenbeschränkungen, z. B. Twitter.
+    </p>
+</div>
+
+    <footer>
+<p><p><b>Wichtige Links:</b></p>
+    <p>Hier findest du alle relevanten Informationen rund um Impressum, Datenschutz, Nutzungsbedingungen und Kontaktmöglichkeiten. Unser Ziel ist es, dir eine sichere und benutzerfreundliche Erfahrung auf unserer Plattform zu bieten.</p>
+        <p><b><a href="https://craftportal.net/impressum">Impressum</b></a> | <a href="https://craftportal.net/datenschutz"><b>Datenschutz</b></a> | <a href="https://craftportal.net/impressum"><b>Kontakt</b></a></p>
+    </footer>
+
+
+<script>
+function shortenURL(event) {
+    event.preventDefault();
+
+    const loadingSpinner = document.getElementById('spinner'); // Anpassung: loadingSpinner verwenden
+    const responseMessage = document.getElementById('response');
+    const errorMessage = document.getElementById('error');
+    let urlInput = document.getElementById('url').value.trim();
+    const custom = document.getElementById('custominput').value;
+    const domainSelect = document.getElementById('domain').value;
+
+    const blockedDomains = [
+        'bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'is.gd', 'buff.ly', 'ow.ly', 'rebrandly.com',
+        't2mio.com', 'blink.io', 'shorte.st', 'cutt.ly', 'clkim.com', 'snip.ly', 'yourls.org',
+        'polrproject.org', 'short.io', 'adf.ly', 'tiny.cc', 'lnnkin.com', 'chilp.it', 'v.gd'
+    ];
+
+    if (!urlInput.startsWith('http://') && !urlInput.startsWith('https://')) {
+        urlInput = 'http://' + urlInput;
+    }
+
+    try {
+        const urlDomain = new URL(urlInput).hostname;
+
+        if (blockedDomains.some(domain => urlDomain.includes(domain))) {
+            errorMessage.innerHTML = "Fehler: Links von anderen URL-Shortenern sind nicht erlaubt.";
+            return;
+        }
+    } catch (e) {
+        errorMessage.innerHTML = "Fehler: Bitte eine gültige URL eingeben.";
+        return;
+    }
+
+    let apiKey;
+    if (domainSelect === 'redirect.craftportal.net') {
+        apiKey = 'pk_FvSDJWiNYAPwgDh8';
+    } else if (domainSelect === 'link.ix.tc') {
+        apiKey = 'pk_kI2hFHYh3H3EDCDQ';
+    } else if (domainSelect === 'link.ctx.cl') {
+        apiKey = 'pk_adF2PUkkxZob1Npo';
+    } else {
+        errorMessage.innerHTML = "Fehler: Unbekannte Domain.";
+        return;
+    }
+
+    loadingSpinner.style.display = 'inline-block'; // Spinner anzeigen
+    responseMessage.innerHTML = '';
+    errorMessage.innerHTML = '';
+
+    const data = {
+        "domain": domainSelect,
+        "originalURL": urlInput,
+        "allowDuplicates": false
+    };
+
+    if (custom) {
+        data.path = custom;
+    }
+
+    fetch('https://api.short.cm/links/public', {
+        method: 'post',
+        headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'authorization': apiKey
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadingSpinner.style.display = 'none'; // Spinner ausblenden
+        if (data.shortURL) {
+            responseMessage.innerHTML =
+                `<div class="output-url"><a onclick="copyLink('${data.shortURL}')">${data.shortURL}</a></div>`;
+            navigator.clipboard.writeText(data.shortURL);
+            alert("Kurzlink kopiert: " + data.shortURL);
+        } else if (data.message && data.message.includes("already exists")) {
+            errorMessage.innerHTML = "Fehler: Das benutzerdefinierte Kürzel existiert bereits.";
+        } else {
+            errorMessage.innerHTML = "Fehler: " + data.message;
+        }
+    })
+    .catch(error => {
+        loadingSpinner.style.display = 'none'; // Spinner ausblenden bei Fehler
+        errorMessage.innerHTML = "Es gab einen Fehler: " + error;
+    });
+
+    document.getElementById('url').value = '';
+    document.getElementById('custominput').value = '';
+}
+
+        const cursorCircle = document.createElement('div');
+        cursorCircle.classList.add('cursor-circle');
+        document.body.appendChild(cursorCircle);
+
+        // Verfolge die Mausbewegungen und aktualisiere die Position des benutzerdefinierten Cursors
+        document.addEventListener('mousemove', (e) => {
+            cursorCircle.style.left = `${e.pageX}px`;
+            cursorCircle.style.top = `${e.pageY}px`;
+        });
+
+        // Füge den Klick-Effekt hinzu
+        document.addEventListener('mousedown', () => {
+            cursorCircle.classList.add('click');
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursorCircle.classList.remove('click');
+        });
+
+</script>
+
+</body>
+</html>
